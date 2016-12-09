@@ -1,9 +1,12 @@
-NAME = weaveworksdemos/payment
+NAME = ghanique/payment-haskell
 INSTANCE = payment
 
-.PHONY: default build copy
+.PHONY: default build copy base
 
 default: build
+
+base:
+	docker build -t $(NAME)-base -f ./docker/payment/Dockerfile-base .
 
 build:
 	docker build -t $(NAME)-dev -f ./docker/payment/Dockerfile .
@@ -17,4 +20,4 @@ release:
 	docker build -t $(NAME) -f ./docker/payment/Dockerfile-release .
 
 run:
-	docker run --rm -p 8082:80 --name $(INSTANCE) $(NAME)
+	docker run -p 8080:8080 -d $(NAME)-dev
