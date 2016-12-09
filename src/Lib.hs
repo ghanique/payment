@@ -5,35 +5,46 @@ module Lib
     ( startApp
     ) where
 
+import Prelude hiding (log)
 import Data.Aeson
 import Data.Aeson.TH
 import Network.Wai
 import Network.Wai.Handler.Warp
 import Servant
+import System.IO
+import Control.Exception hiding (Handler)
 
-data User = User
-  { userId        :: Int
-  , userFirstName :: String
-  , userLastName  :: String
-  } deriving (Eq, Show)
+data PaymentRequest = PaymentRequest
+  { amount :: Double
+  }
+$(deriveJSON defaultOptions ''PaymentRequest)
 
-$(deriveJSON defaultOptions ''User)
+data PaymentResponse = PaymentResponse
+  { authorised :: Bool
+  }
+$(deriveJSON defaultOptions ''PaymentResponse)
 
-type API = "users" :> Get '[JSON] [User]
+type API =
+  "paymentAuth" :>
+  ReqBody '[JSON] PaymentRequest :>
+  Post '[JSON] PaymentResponse
+
+log s = do
+  hPutStrLn stderr s
 
 startApp :: IO ()
-startApp = run 8080 app
+startApp = do
+  log "Starting..."
+  run 80 app
 
 app :: Application
-app = serve api server
+app request responder = do
+  log (show request)
+  serve api server request responder
 
 api :: Proxy API
 api = Proxy
 
-server :: Server API
-server = return users
-
-users :: [User]
-users = [ User 1 "Isaac" "Newton"
-        , User 2 "Albert" "Einstein"
-        ]
+server :: PaymentRequest -> Handler PaymentResponse -- == Server API
+server req | amount req >= 42 = return $ PaymentResponse False
+server _ = return $ PaymentResponse True

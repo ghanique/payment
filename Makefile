@@ -20,4 +20,4 @@ release:
 	docker build -t $(NAME) -f ./docker/payment/Dockerfile-release .
 
 run:
-	docker run -p 8080:8080 -d $(NAME)-dev
+	docker run --name dev -p 8080:8080 -d $(NAME)-dev
