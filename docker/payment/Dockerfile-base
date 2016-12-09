@@ -1,4 +1,4 @@
-FROM haskell
+FROM roberthensing/haskell-servant-docker:latest
 MAINTAINER FP-hackathon
 # First, copy the build files, to get the dependencies for stack
 ADD ./stack.yaml /payment/stack.yaml
