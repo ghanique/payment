@@ -1,4 +1,9 @@
-[![Build Status](https://travis-ci.org/microservices-demo/payment.svg?branch=master)](https://travis-ci.org/microservices-demo/payment) [![Coverage Status](https://coveralls.io/repos/github/microservices-demo/payment/badge.svg?branch=master)](https://coveralls.io/github/microservices-demo/payment?branch=master)
+[![Build Status](https://travis-ci.org/microservices-demo/payment.svg?branch=haskell)](https://travis-ci.org/microservices-demo/payment) [![Coverage Status](https://coveralls.io/repos/github/microservices-demo/payment/badge.svg?branch=haskell)](https://coveralls.io/github/microservices-demo/payment?branch=haskell)
+
+# THIS FILE IS OUT OF DATE
+
+Use the stack tool.
+
 
 # payment
 A microservices-demo service that provides payment services.
