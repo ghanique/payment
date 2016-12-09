@@ -13,6 +13,7 @@ import Network.Wai.Handler.Warp
 import Servant
 import System.IO
 import Control.Exception hiding (Handler)
+import qualified Data.ByteString as BS
 
 data PaymentRequest = PaymentRequest
   { amount :: Double
@@ -36,6 +37,14 @@ startApp :: IO ()
 startApp = do
   log "Starting..."
   run 80 app
+
+logBody req = do
+  chunk <- requestBody req
+  if BS.length chunk == 0
+    then return ()
+    else do
+      BS.hPut stderr chunk
+      logBody req
 
 app :: Application
 app request responder = do
