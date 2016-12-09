@@ -1,12 +1,17 @@
-FROM golang:1.6
+FROM haskell
+MAINTAINER FP-hackathon
+# First, copy the build files, to get the dependencies for stack
+ADD ./stack.yaml /payment/stack.yaml
+ADD ./payment.cabal /payment/payment.cabal
+WORKDIR /payment
+# "Install" without the rest of the source code - this will get all deps and then fail
+RUN stack install || true
+# Now add the rest of the source...
+ADD . /payment
+# And build for real
+RUN stack install
 
-RUN mkdir /app
-COPY . /go/src/github.com/microservices-demo/payment/
+CMD "/root/.local/bin/payment-exe"
 
-RUN go get -v github.com/gorilla/mux github.com/go-kit/kit/log github.com/go-kit/kit/endpoint github.com/go-kit/kit/transport/http github.com/go-kit/kit/metrics/prometheus github.com/prometheus/client_golang/prometheus
+EXPOSE 8080
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/main github.com/microservices-demo/payment/cmd/paymentsvc
-
-CMD ["/app/main", "-port=80"]
-
-EXPOSE 80
